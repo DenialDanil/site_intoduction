@@ -4,317 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Проєкт: Моніторинг стану довкілля на базі ESP32</title>
-    <!-- Bootstrap CSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            background-color: #f0f9f0;
-            color: #333;
-        }
-        h1, h2, h3, h4 {
-            color: #198754;
-        }
-        .bg-green {
-            background-color: #d1e7dd;
-        }
-        .text-green {
-            color: #0f5132;
-        }
-        .list-group-item {
-            background-color: #e9f5e9;
-            border-color: #badbcc;
-        }
-        em {
-            color: #198754;
-        }
-        .scheme-img {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            border: 3px solid #198754;
-        }
-        .table thead {
-            background-color: #198754;
-            color: white;
-        }
-        .table tbody tr:hover {
-            background-color: #e9f5e9;
-        }
-        .accordion-button {
-            background-color: #d1e7dd;
-            color: #0f5132;
-        }
-        .accordion-button:not(.collapsed) {
-            background-color: #198754;
-            color: white;
-        }
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin: auto; }
+        h1, h2 { color: #333; }
+        ul { list-style-type: disc; padding-left: 20px; }
+        p { margin-bottom: 15px; }
+        img { max-width: 100%; height: auto; display: block; margin: 20px auto; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f0f0f0; }
     </style>
 </head>
 <body>
-
-    <div class="container mt-5 bg-green p-4 rounded shadow">
-        <h1 class="text-center">Проєкт: Програмно-апаратний інтерфейс для візуалізації стану довкілля на базі ESP32</h1>
-        
-        <p class="lead text-center text-green">Цей проєкт — це інноваційна IoT-система для моніторингу та візуалізації параметрів довкілля, розроблена з використанням мікроконтролера ESP32 та набору датчиків. Основна мета — збирати дані про температуру, вологість, якість повітря (включаючи рівень CO2), освітлення та шум у реальному часі, з подальшою передачею їх на хмарний сервер для аналізу та відображення.</p>
-        
-        <h2>Ключові компоненти та функції:</h2>
-        <ul class="list-group">
-            <li class="list-group-item"><strong>Апаратна частина</strong>: ESP32 як центральний процесор, інтегрований з датчиками (DHT22 для температури/вологості, MQ-135 та CCS811 для газів, BH1750 для освітлення, мікрофон для шуму) та OLED-дисплеєм для локальної візуалізації.</li>
-            <li class="list-group-item"><strong>Програмна частина</strong>: Дані передаються через Wi-Fi на MQTT-брокер (HiveMQ Cloud), де вони обробляються та доступні для веб-сайту на Render.com з графіками та сповіщеннями.</li>
-            <li class="list-group-item"><strong>Застосування</strong>: Ідеально для шкільних класів — моніторинг допомагає підтримувати комфортні умови, виявляти забруднення та оптимізувати енергоспоживання.</li>
-        </ul>
-        
-        <h2 class="mt-4">Значення проєкту:</h2>
-        <p class="text-green">У контексті глобальних викликів, таких як зміна клімату та забруднення, проєкт сприяє досягненню Цілей сталого розвитку ООН (SDG 3: здоров'я, SDG 11: сталі міста, SDG 13: боротьба зі зміною клімату). Він підвищує обізнаність про екологічні проблеми, допомагає запобігати респіраторним захворюванням від поганої вентиляції та заохочує до енергоефективності. Для освіти — це практичний інструмент для вивчення IoT, програмування та екології, з потенціалом для масштабування в міських мережах моніторингу.</p>
-        
-        <p class="text-center"><em>Проєкт демонструє, як доступні технології можуть перетворювати дані на дії для кращого майбутнього!</em></p>
-
-        <!-- Схема -->
-        <div class="mt-5 text-center">
-            <h3 class="mb-4">Схема проєкту</h3>
-            <img src="img/scheme.png" alt="Схема програмно-апаратного інтерфейсу" class="img-fluid rounded scheme-img" style="max-width: 100%; height: auto;">
-            <p class="mt-3 text-muted"><small>Схема підключення датчиків до ESP32 та передачі даних у хмару</small></p>
-        </div>
-
-        <!-- Використані датчики (попередня таблиця) -->
-        <div class="mt-5">
-            <h3 class="text-center mb-4">Використані датчики</h3>
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>Датчик</th>
-                            <th>Параметр</th>
-                            <th>Діапазон вимірювання</th>
-                            <th>Точність</th>
-                            <th>Підключення</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>DHT22</td><td>Температура та вологість</td><td>-40...+80°C / 0-100%</td><td>±0.5°C / ±2-5%</td><td>GPIO4</td></tr>
-                        <tr><td>CCS811</td><td>CO₂ та TVOC</td><td>400-8192 ppm / 0-1187 ppb</td><td>±10%</td><td>I²C</td></tr>
-                        <tr><td>MQ-135</td><td>Якість повітря (NH3, NOx, CO тощо)</td><td>10-1000 ppm</td><td>~±20%</td><td>Аналоговий ADC1</td></tr>
-                        <tr><td>BH1750</td><td>Освітленість</td><td>0-65535 lx</td><td>±20%</td><td>I²C</td></tr>
-                        <tr><td>Мікрофон MAX9814</td><td>Рівень шуму</td><td>30-120 дБ</td><td>~±3 дБ</td><td>Аналоговий ADC2</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- НОВИЙ РОЗДІЛ: Перелік засобів та таблиці характеристик -->
-        <div class="mt-5">
-            <h2 class="text-center mb-4">Перелік засобів та детальні характеристики</h2>
-            <p class="text-center text-green">Нижче наведено повний список апаратних компонентів з кількістю, призначенням та детальними технічними характеристиками (з datasheet).</p>
-
-            <!-- Accordion для кожного компонента -->
-            <div class="accordion" id="componentsAccordion">
-                
-                <!-- 1. ESP32 DevKit -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#esp32">
-                            1. ESP32 DevKit (1 шт.) — центральний контролер
-                        </button>
-                    </h2>
-                    <div id="esp32" class="accordion-collapse collapse show" data-bs-parent="#componentsAccordion">
-                        <div class="accordion-body">
-                            <p><strong>Призначення:</strong> обробка даних з датчиків, Wi-Fi/Bluetooth для передачі (наприклад, до MQTT), керування візуалізацією.</p>
-                            <div class="table-responsive">
-                                <table class="table table-sm table-bordered">
-                                    <thead><tr><th>Характеристика</th><th>Значення</th></tr></thead>
-                                    <tbody>
-                                        <tr><td>Процесор</td><td>Двоядерний Xtensa LX6, 240 МГц</td></tr>
-                                        <tr><td>Пам'ять</td><td>520 КБ SRAM, до 16 МБ флеш</td></tr>
-                                        <tr><td>Інтерфейси</td><td>34 GPIO, ADC, I2C, SPI, UART, PWM</td></tr>
-                                        <tr><td>Бездротовий</td><td>Wi-Fi 802.11 b/g/n, Bluetooth 4.2/BLE</td></tr>
-                                        <tr><td>Напруга</td><td>3.3V, споживання: 100-200 мА (активний)</td></tr>
-                                        <tr><td>Діапазон температур</td><td>-40°C до +125°C</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2. DHT22 -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#dht22">
-                            2. DHT22 (1 шт.) — датчик температури та вологості
-                        </button>
-                    </h2>
-                    <div id="dht22" class="accordion-collapse collapse" data-bs-parent="#componentsAccordion">
-                        <div class="accordion-body">
-                            <p><strong>Призначення:</strong> моніторинг мікроклімату для комфорту та виявлення змін клімату.</p>
-                            <div class="table-responsive">
-                                <table class="table table-sm table-bordered">
-                                    <thead><tr><th>Характеристика</th><th>Значення</th></tr></thead>
-                                    <tbody>
-                                        <tr><td>Діапазон температури</td><td>-40°C до +80°C, точність ±0.5°C</td></tr>
-                                        <tr><td>Діапазон вологості</td><td>0-100% RH, точність ±2%</td></tr>
-                                        <tr><td>Напруга</td><td>3.3V-5.5V, струм 0.3 мА (вимірювання)</td></tr>
-                                        <tr><td>Інтерфейс</td><td>Цифровий (1-wire)</td></tr>
-                                        <tr><td>Роздільність</td><td>0.1°C / 0.1% RH</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3. MQ-135 -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mq135">
-                            3. MQ-135 (1 шт.) — датчик газів
-                        </button>
-                    </h2>
-                    <div id="mq135" class="accordion-collapse collapse" data-bs-parent="#componentsAccordion">
-                        <div class="accordion-body">
-                            <p><strong>Призначення:</strong> виявлення забруднювачів повітря (CO2, NH3 тощо) для оцінки якості повітря.</p>
-                            <div class="table-responsive">
-                                <table class="table table-sm table-bordered">
-                                    <thead><tr><th>Характеристика</th><th>Значення</th></tr></thead>
-                                    <tbody>
-                                        <tr><td>Виявлені гази</td><td>CO2, NH3, бензол, алкоголь, дим</td></tr>
-                                        <tr><td>Діапазон концентрації</td><td>10-1000 ppm (CO2)</td></tr>
-                                        <tr><td>Напруга</td><td>5V, нагрівальний струм 150 мА</td></tr>
-                                        <tr><td>Інтерфейс</td><td>Аналоговий/цифровий</td></tr>
-                                        <tr><td>Чутливість</td><td>Висока, швидка відповідь (1-10 с)</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 4. SSD1306 OLED -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#oled">
-                            4. SSD1306 OLED (1 шт.) — дисплей
-                        </button>
-                    </h2>
-                    <div id="oled" class="accordion-collapse collapse" data-bs-parent="#componentsAccordion">
-                        <div class="accordion-body">
-                            <p><strong>Призначення:</strong> локальна візуалізація даних (графіки, значення) для швидкого перегляду.</p>
-                            <div class="table-responsive">
-                                <table class="table table-sm table-bordered">
-                                    <thead><tr><th>Характеристика</th><th>Значення</th></tr></thead>
-                                    <tbody>
-                                        <tr><td>Розмір екрану</td><td>0.96" (128x64 пікселів)</td></tr>
-                                        <tr><td>Інтерфейс</td><td>I2C/SPI</td></tr>
-                                        <tr><td>Напруга</td><td>3.3V-5V</td></tr>
-                                        <tr><td>Контраст</td><td>Високий (OLED технологія)</td></tr>
-                                        <tr><td>Кут огляду</td><td>>160°</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 5. BH1750 -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#bh1750">
-                            5. BH1750 (1 шт.) — датчик освітлення
-                        </button>
-                    </h2>
-                    <div id="bh1750" class="accordion-collapse collapse" data-bs-parent="#componentsAccordion">
-                        <div class="accordion-body">
-                            <p><strong>Призначення:</strong> вимірювання рівня освітлення для оптимізації комфорту та енергоефективності.</p>
-                            <div class="table-responsive">
-                                <table class="table table-sm table-bordered">
-                                    <thead><tr><th>Характеристика</th><th>Значення</th></tr></thead>
-                                    <tbody>
-                                        <tr><td>Діапазон освітлення</td><td>1-65535 люкс</td></tr>
-                                        <tr><td>Роздільність</td><td>1 люкс</td></tr>
-                                        <tr><td>Напруга</td><td>2.4V-3.6V</td></tr>
-                                        <tr><td>Інтерфейс</td><td>I2C</td></tr>
-                                        <tr><td>Точність</td><td>±20%</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 6. CCS811 -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ccs811">
-                            6. CCS811 (1 шт.) — датчик CO2 та VOC
-                        </button>
-                    </h2>
-                    <div id="ccs811" class="accordion-collapse collapse" data-bs-parent="#componentsAccordion">
-                        <div class="accordion-body">
-                            <p><strong>Призначення:</strong> моніторинг рівня CO2 у приміщенні для запобігання втоми/респіраторних проблем.</p>
-                            <div class="table-responsive">
-                                <table class="table table-sm table-bordered">
-                                    <thead><tr><th>Характеристика</th><th>Значення</th></tr></thead>
-                                    <tbody>
-                                        <tr><td>Діапазон eCO2</td><td>400-8192 ppm</td></tr>
-                                        <tr><td>Діапазон TVOC</td><td>0-1187 ppb</td></tr>
-                                        <tr><td>Напруга</td><td>1.8V-3.6V</td></tr>
-                                        <tr><td>Інтерфейс</td><td>I2C</td></tr>
-                                        <tr><td>Чутливість</td><td>Ультранизьке споживання (1.2 мА)</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 7. Sound Sensor -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sound">
-                            7. Sound Sensor (1 шт.) — модуль детекції звуку
-                        </button>
-                    </h2>
-                    <div id="sound" class="accordion-collapse collapse" data-bs-parent="#componentsAccordion">
-                        <div class="accordion-body">
-                            <p><strong>Призначення:</strong> моніторинг рівня шуму для оцінки акустичного комфорту.</p>
-                            <div class="table-responsive">
-                                <table class="table table-sm table-bordered">
-                                    <thead><tr><th>Характеристика</th><th>Значення</th></tr></thead>
-                                    <tbody>
-                                        <tr><td>Чутливість мікрофона</td><td>50-54 дБ (1 кГц)</td></tr>
-                                        <tr><td>Діапазон частот</td><td>100-10 кГц</td></tr>
-                                        <tr><td>Напруга</td><td>3.3V-5V</td></tr>
-                                        <tr><td>Інтерфейс</td><td>Аналоговий/цифровий</td></tr>
-                                        <tr><td>Вихід</td><td>Регульований поріг</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Додаткові засоби -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#additional">
-                            Додаткові засоби (з набору Keyestudio)
-                        </button>
-                    </h2>
-                    <div id="additional" class="accordion-collapse collapse" data-bs-parent="#componentsAccordion">
-                        <div class="accordion-body">
-                            <ul class="list-group">
-                                <li class="list-group-item">Резистори (10KΩ) — 5-10 шт. — для pull-up</li>
-                                <li class="list-group-item">Jumper wires — 20-30 шт. — для підключення</li>
-                                <li class="list-group-item">Breadboard — 1 шт. — для прототипу</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <h1>Проєкт: Програмно-апаратний інтерфейс для візуалізації стану довкілля на базі ESP32</h1>
+    
+    <p>Цей проєкт — це інноваційна IoT-система для моніторингу та візуалізації параметрів довкілля, розроблена з використанням мікроконтролера ESP32 та набору датчиків. Основна мета — збирати дані про температуру, вологість, якість повітря (включаючи рівень CO2), освітлення та шум у реальному часі, з подальшою передачею їх на хмарний сервер для аналізу та відображення.</p>
+    
+    <h2>Ключові компоненти та функції:</h2>
+    <ul>
+        <li><strong>Апаратна частина</strong>: ESP32 як центральний процесор, інтегрований з датчиками (DHT22 для температури/вологості, MQ-135 та CCS811 для газів, BH1750 для освітлення, мікрофон для шуму) та OLED-дисплеєм для локальної візуалізації.</li>
+        <li><strong>Програмна частина</strong>: Дані передаються через Wi-Fi на MQTT-брокер (HiveMQ Cloud), де вони обробляються та доступні для веб-сайту на Render.com з графіками та сповіщеннями.</li>
+        <li><strong>Застосування</strong>: Ідеально для шкільних класів — моніторинг допомагає підтримувати комфортні умови, виявляти забруднення та оптимізувати енергоспоживання.</li>
+    </ul>
+    
+    <h2>Значення проєкту:</h2>
+    <p>У контексті глобальних викликів, таких як зміна клімату та забруднення, проєкт сприяє досягненню Цілей сталого розвитку ООН (SDG 3: здоров'я, SDG 11: сталі міста, SDG 13: боротьба зі зміною клімату). Він підвищує обізнаність про екологічні проблеми, допомагає запобігати респіраторним захворюванням від поганої вентиляції та заохочує до енергоефективності. Для освіти — це практичний інструмент для вивчення IoT, програмування та екології, з потенціалом для масштабування в міських мережах моніторингу.</p>
+    
+    <p><em>Проєкт демонструє, як доступні технології можуть перетворювати дані на дії для кращого майбутнього!</em></p>
+    
+    <img src="scheme.png" alt="Схема проєкту">
+    
+    <h2>Де купити компоненти та загальна вартість</h2>
+    <p>Повний набір апаратних засобів можна зібрати <strong>з одного набору Keyestudio ESP32 Ultimate Edition</strong> (містить ESP32, DHT22, Sound Sensor, OLED SSD1306, BH1750 та більшість допоміжних елементів: breadboard, дроти, резистори тощо). Додатково потрібно докупити лише MQ-135 та CCS811 (вони не входять до набору).</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Компонент</th>
+                <th>Кількість</th>
+                <th>Де купити (посилання)</th>
+                <th>Ціна (приблизно, грн)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Keyestudio ESP32 Ultimate Edition (повний набір з ESP32, DHT22, BH1750, OLED, Sound Sensor тощо)</td>
+                <td>1 шт.</td>
+                <td><a href="https://keyestudio.com/products/keyestudio-esp32-ultimate-learning-kit" target="_blank">Офіційний сайт Keyestudio</a> або <a href="https://www.aliexpress.com/item/1005006149351788.html" target="_blank">AliExpress</a></td>
+                <td>1400–1800</td>
+            </tr>
+            <tr>
+                <td>MQ-135 (датчик газів)</td>
+                <td>1 шт.</td>
+                <td><a href="https://www.aliexpress.com/item/1005007671036039.html" target="_blank">AliExpress</a> або <a href="https://rozetka.com.ua/ua/413150398/p413150398/" target="_blank">Rozetka</a></td>
+                <td>80–120</td>
+            </tr>
+            <tr>
+                <td>CCS811 (датчик CO₂ та VOC)</td>
+                <td>1 шт.</td>
+                <td><a href="https://www.aliexpress.com/item/32841184502.html" target="_blank">AliExpress</a> або <a href="https://www.amazon.com/HiLetgo-CCS811-Indoor-Quality-Carbon/dp/B07Q4R9NDT" target="_blank">Amazon</a></td>
+                <td>250–350</td>
+            </tr>
+            <tr>
+                <td><strong>Разом (з доставкою)</strong></td>
+                <td>-</td>
+                <td>-</td>
+                <td><strong>1800–2300 грн</strong></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <p>Рекомендація: Замовляйте Keyestudio на AliExpress (з безкоштовною доставкою) + окремо MQ-135 та CCS811 у тому ж продавця, щоб зекономити на доставці. Ціни актуальні на листопад 2025 р. і можуть коливатися.</p>
 </body>
-
 </html>
